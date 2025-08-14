@@ -2,25 +2,22 @@
 <html lang="da">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Spot Demo</title>
-  <link rel="stylesheet" href="/static/styles.css" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Robotoversigt</title>
+  <link rel="icon" href="/static/favicon.ico">
+  <link rel="stylesheet" href="/static/styles.css?v=1" />
 </head>
 <body>
-  <header><h1>Spot Demo</h1></header>
+  <header class="shell header-flex">
+    <h1>Robotter</h1>
+    <img src="/static/logo.png" alt="Teknologisk Institut" class="logo">
+  </header>
 
-  <main>
-    <div class="video-wrap">
-      <video id="video" src="/placeholder.mp4" autoplay muted loop playsinline controls></video>
-    </div>
-
-    <div class="controls">
-      <button id="btnStart">Start demo</button>
-      <button id="btnStop">Stop demo</button>
-      <span id="status">Klar</span>
-    </div>
+  <main class="shell">
+    <p class="muted">Vælg en robot for live visning.</p>
+    <section id="grid" class="grid"></section>
   </main>
 
-  <script src="/static/app.js"></script>
+  <script src="/static/app_index.js?v=1"></script>
 </body>
 </html>

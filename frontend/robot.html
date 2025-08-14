@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Robot</title>
+  <link rel="stylesheet" href="/static/styles.css?v=1" />
+</head>
+<body>
+  <img src="/static/logo.png" alt="Teknologisk Institut" class="logo">
+  <header class="shell">
+    <a href="/" class="back">← Tilbage</a>
+    <h1 id="title">Robot</h1>
+  </header>
+  <main class="shell">
+    <div class="video-wrap">
+      <img id="mjpeg" alt="stream">
+      <canvas id="overlay"></canvas>
+    </div>
+    <div class="controls">
+      <span id="status" class="muted">Klar</span>
+    </div>
+  </main>
+  <script src="/static/app_robot.js?v=1"></script>
+</body>
+</html>
