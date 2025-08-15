@@ -21,17 +21,25 @@ html, body {
 
 .shell { max-width: 1040px; margin: 0 auto; padding: 16px; }
 
-/* Header med flex for korrekt alignment mellem titel og logo */
+header.shell {
+  padding-left: 0;
+  padding-right: 0;
+}
+
 .header-flex {
   display: flex;
-  align-items: center;           /* lodret centrering */
-  justify-content: space-between;/* titel venstre, logo højre */
+  align-items: center;
+  gap: 16px;
   border-bottom: 1px solid var(--line);
-  padding: 12px 16px;
+}
+
+header.header-flex {
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 .logo {
-  height: 150px;  /* din ønskede højde */
+  height: 150px; 
   width: auto;
   opacity: 0.95;
 }
