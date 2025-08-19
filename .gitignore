@@ -26,6 +26,9 @@ share/python-wheels/
 *.egg
 MANIFEST
 
+# Config filen
+backend/config.py
+
 # Python / venv
 .venv/
 __pycache__/

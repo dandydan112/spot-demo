@@ -136,3 +136,29 @@ button:hover { background: #00584f; }
 /* Sekundær (rød) knap – til advarsler, stop eller kritiske handlinger */
 button.red { background: var(--accent-red); }
 button.red:hover { background: #a50000; }
+
+/* Statusindikatorer ------------------------------------------------------------------------*/
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot.online {
+  background-color: #28a745; /* grøn */
+}
+
+.dot.offline {
+  background-color: #c60000; /* rød */
+}
+/* Statusindikatorer ------------------------------------------------------------------------*/
