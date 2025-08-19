@@ -6,7 +6,7 @@ from fastapi.responses import FileResponse
 import os
 
 from .routers import robots as robots_router
-from .routers import spot as spot_router
+from .routers.spot import spot as spot_router
 
 app = FastAPI(title="Robot Hub")
 
