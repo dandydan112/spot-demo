@@ -16,7 +16,7 @@ ROBOT_REGISTRY: Dict[str, Dict[str, Any]] = {
             "perception": "/api/robots/spot-001/perception",
         },
         "status": "online",
-        "thumbnail": "/static/logo.png",
+        "thumbnail": "/static/img/thumbs/spotimg.png",
     }
 }
 

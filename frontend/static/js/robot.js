@@ -1,4 +1,6 @@
-function qs(name){ return new URL(location.href).searchParams.get(name); }
+function qs(name){ 
+  return new URL(location.href).searchParams.get(name); 
+}
 
 const statusEl = document.getElementById('status');
 const titleEl  = document.getElementById('title');
@@ -7,8 +9,8 @@ const overlay = document.getElementById('overlay');
 const ctx = overlay.getContext('2d');
 
 function resizeCanvas(){
-  const r = img.getBoundingClientRect();
-  overlay.width = r.width; overlay.height = r.height;
+  overlay.width = img.clientWidth;
+  overlay.height = img.clientHeight;
 }
 window.addEventListener('resize', resizeCanvas);
 img.addEventListener('load', resizeCanvas);
@@ -30,19 +32,5 @@ async function init() {
     drawOverlay(msg);
   };
 }
-
-// function drawOverlay(msg){
-//   const [iw, ih] = msg.image_size || [960, 540];
-//   const cw = overlay.width, ch = overlay.height;
-//   const sx = cw / iw, sy = ch / ih;
-//   ctx.clearRect(0,0,cw,ch);
-//   ctx.lineWidth = 2 * ((sx+sy)/2);
-
-//   (msg.boxes || []).forEach(b => {
-//     const [x,y,w,h] = b.xywh;
-//     ctx.strokeStyle = 'lime';
-//     ctx.strokeRect(x*sx, y*sy, w*sx, h*sy);
-//   });
-// }
 
 init();

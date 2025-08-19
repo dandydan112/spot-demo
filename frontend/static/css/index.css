@@ -1,0 +1,30 @@
+.video-wrap {
+  position: relative;
+  max-width: 960px;
+  aspect-ratio: 16/9;
+  margin: 12px 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+}
+
+#mjpeg, #overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+#status {
+  font-size: 14px;
+  color: var(--muted);
+}

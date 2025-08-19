@@ -24,7 +24,7 @@ async function loadRobots() {
 
     // Byg HTML til kortet
     a.innerHTML = `
-      <div class="thumb" style="background-image:url('${r.thumbnail || '/static/logo.png'}')"></div>
+      <div class="thumb" style="background-image:url('${r.thumbnail || '/static/img/logo.png'}')"></div>
       <div class="card-body">
         <div class="card-title">${r.name}</div>
         <div class="tag">${r.kind}</div>
