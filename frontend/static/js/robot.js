@@ -72,23 +72,32 @@ async function init() {
   setInterval(() => updateStatus(id), 5000);
 }
 
-// Event handler til demo-knappen
-document.getElementById('helloBtn').addEventListener('click', async () => {
-  const id = qs('id');
+// Generisk funktion til at kalde Spot demo endpoints
+async function callDemo(id, action) {
   try {
-    // Kalder backend endpoint for demo
-    const res = await fetch(`/api/robots/${encodeURIComponent(id)}/demo/hello`, {
+    const res = await fetch(`/api/robots/${encodeURIComponent(id)}/demo/${action}`, {
       method: 'POST'
     });
     const data = await res.json();
-
-    // Viser feedback direkte i interfacet i stedet for popup
-    feedbackEl.textContent = data.message || "Demo kørt!";
-    feedbackEl.style.color = "green";
+    feedbackEl.textContent = data.message || data.error || "OK";
+    feedbackEl.style.color = data.error ? "red" : "green";
   } catch (e) {
     feedbackEl.textContent = "Fejl: " + e.message;
     feedbackEl.style.color = "red";
   }
+}
+
+// Event handlers til knapper
+document.getElementById('helloBtn').addEventListener('click', () => {
+  callDemo(qs('id'), "hello");
+});
+
+document.getElementById('layBtn').addEventListener('click', () => {
+  callDemo(qs('id'), "lay");
+});
+
+document.getElementById('powerOffBtn').addEventListener('click', () => {
+  callDemo(qs('id'), "poweroff");
 });
 
 init();

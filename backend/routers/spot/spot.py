@@ -18,17 +18,44 @@ else:
         password=SPOT_CONFIG["password"],
     )
 
+
 @router.post("/demo/hello")
 async def hello_demo():
-    """
-    Endpoint til 'Hello Spot' demo.
-    """
+    """Endpoint til 'Hello Spot' demo."""
     try:
         if USE_FAKE_SPOT:
             await asyncio.sleep(1)
             return {"status": "ok", "message": "Hello Spot demo (fake)"}
         else:
             msg = spot_client.hello_spot()
+            return {"status": "ok", "message": msg}
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
+
+
+@router.post("/demo/lay")
+async def lay_demo():
+    """Endpoint til at lægge Spot ned."""
+    try:
+        if USE_FAKE_SPOT:
+            await asyncio.sleep(1)
+            return {"status": "ok", "message": "Lay Spot demo (fake)"}
+        else:
+            msg = spot_client.lay_down()
+            return {"status": "ok", "message": msg}
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
+
+
+@router.post("/demo/poweroff")
+async def poweroff_demo():
+    """Endpoint til at slukke Spot (power off)."""
+    try:
+        if USE_FAKE_SPOT:
+            await asyncio.sleep(1)
+            return {"status": "ok", "message": "Power Off demo (fake)"}
+        else:
+            msg = spot_client.power_off()
             return {"status": "ok", "message": msg}
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)

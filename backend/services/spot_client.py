@@ -4,6 +4,10 @@ from typing import AsyncIterator, Dict
 import asyncio, io, time
 import numpy as np
 from PIL import Image
+import bosdyn.client
+import bosdyn.client.util
+from bosdyn.client.robot_command import RobotCommandClient, blocking_stand, RobotCommandBuilder
+from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
 
 # ============================================================
 # FAKE CLIENT (bruges til test uden Spot)
@@ -46,11 +50,6 @@ class FakeSpotClient:
 # ============================================================
 # REAL CLIENT (kræver Spot SDK + en rigtig robot)
 # ============================================================
-import bosdyn.client
-import bosdyn.client.util
-from bosdyn.client.robot_command import RobotCommandClient, blocking_stand, RobotCommandBuilder
-from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
-
 
 class RealSpotClient:
     name = "spot-001"
@@ -74,16 +73,8 @@ class RealSpotClient:
             self.command_client = self.robot.ensure_client(RobotCommandClient.default_service_name)
             self.lease_client = self.robot.ensure_client(LeaseClient.default_service_name)
 
-            # 👉 Hent en lease manuelt
-            lease = self.lease_client.acquire()
-            print("[RealSpotClient] Lease acquired:", lease)
-
-            # Hold lease så længe vi kører
-            self.lease_keepalive = LeaseKeepAlive(
-                self.lease_client,
-                lease=lease,
-                return_at_exit=True,
-            )
+            # LeaseKeepAlive sørger for at vi hele tiden har en lease
+            self.lease_keepalive = LeaseKeepAlive(self.lease_client, return_at_exit=True)
             print("[RealSpotClient] LeaseKeepAlive startet")
 
         except Exception as e:
@@ -121,6 +112,24 @@ class RealSpotClient:
         print("[RealSpotClient] Tilbage til normal stand")
 
         return "Hello Spot demo udført!"
+    
+    def lay_down(self) -> str:
+        """Få Spot tilbage i siddende tilstand."""
+        print("[RealSpotClient] Lay Spot → Sit")
+
+        sit_cmd = RobotCommandBuilder.synchro_sit_command()
+        self.command_client.robot_command(sit_cmd)
+        print("[RealSpotClient] Spot sidder")
+
+        return "Spot er sat tilbage i siddende tilstand"
+
+    def power_off(self) -> str:
+        """Slukker Spot sikkert ned."""
+        print("[RealSpotClient] Powering OFF Spot...")
+        self.robot.power_off(cut_immediately=False, timeout_sec=20)
+        assert not self.robot.is_powered_on(), "Kunne ikke slukke Spot"
+        return "Spot er slukket."
+
 
 
 # ============================================================

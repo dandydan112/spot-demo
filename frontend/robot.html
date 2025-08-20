@@ -25,21 +25,23 @@
 
     <!-- Controls: status + knapper -->
     <div class="controls">
-      <!-- Status indikator (prik + tekst) -->
+      <!-- Status indikator -->
       <div class="status-indicator">
         <span id="dot" class="dot offline"></span>
         <span id="status" class="muted">Ukendt</span>
       </div>
 
-      <!-- Demo-knap + feedback felt -->
+      <!-- Demo-knapper + feedback felt -->
       <div class="demo-controls">
         <button id="helloBtn">Hello Spot</button>
-        <!-- NYT: feedback vises her i stedet for alert() -->
+        <button id="layBtn">Lay Spot</button>
+        <button id="powerOffBtn">Power Off</button>
         <span id="feedback" class="muted" style="margin-left:10px;"></span>
       </div>
     </div>
   </main>
 
-  <script src="/static/js/robot.js?v=1"></script>
+  <!-- JS bundet sidst -->
+  <script src="/static/js/robot.js?v=2"></script>
 </body>
 </html>

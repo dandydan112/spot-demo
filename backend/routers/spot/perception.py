@@ -4,7 +4,7 @@ from fastapi.responses import StreamingResponse, JSONResponse
 import subprocess
 
 from ...services.spot_client import FakeSpotClient
-from ...config import SPOT_CONFIG   # 👈 Hent konfig
+from ...config import SPOT_CONFIG   # Hent konfig
 
 router = APIRouter(prefix="/api/robots/spot-001", tags=["spot"])
 client = FakeSpotClient(placeholder_path="frontend/placeholder.mp4")
