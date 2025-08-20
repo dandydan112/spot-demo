@@ -137,3 +137,9 @@ button.red:hover { background: #a50000; }
   background-color: #c60000; /* rød */
 }
 /* Statusindikatorer ------------------------------------------------------------------------*/
+
+.feedback {
+  margin-left: 10px;
+  font-size: 13px;
+  color: var(--accent);
+}

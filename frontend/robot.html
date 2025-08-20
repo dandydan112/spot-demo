@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Robot</title>
   <link rel="icon" href="/static/img/favicon.ico">
+  <link rel="stylesheet" href="/static/css/robot.css?v=1">
   <link rel="stylesheet" href="/static/css/base.css?v=1">
 </head>
 <body>
@@ -14,13 +15,28 @@
   </header>
 
   <main class="shell">
-    <h1 id="title">Spotzitooo</h1>
+    <h1 id="title">Robot</h1>
+
+    <!-- Video container -->
     <div class="video-wrap">
       <img id="mjpeg" alt="stream">
       <canvas id="overlay"></canvas>
     </div>
+
+    <!-- Controls: status + knapper -->
     <div class="controls">
-      <span id="status" class="muted">Klar</span>
+      <!-- Status indikator (prik + tekst) -->
+      <div class="status-indicator">
+        <span id="dot" class="dot offline"></span>
+        <span id="status" class="muted">Ukendt</span>
+      </div>
+
+      <!-- Demo-knap + feedback felt -->
+      <div class="demo-controls">
+        <button id="helloBtn">Hello Spot</button>
+        <!-- NYT: feedback vises her i stedet for alert() -->
+        <span id="feedback" class="muted" style="margin-left:10px;"></span>
+      </div>
     </div>
   </main>
 

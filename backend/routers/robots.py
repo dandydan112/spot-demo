@@ -10,7 +10,7 @@ ROBOT_REGISTRY: Dict[str, Dict[str, Any]] = {
     "spot-001": {
         "id": "spot-001",
         "kind": "spot",
-        "name": "Spot (Demo)",
+        "name": "Spot",
         "endpoints": {
             "mjpeg": "/api/robots/spot-001/stream/mjpeg",
             "perception": "/api/robots/spot-001/perception",

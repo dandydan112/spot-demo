@@ -26,3 +26,11 @@
   font-size: 14px;
   color: var(--muted);
 }
+
+
+/* Robot-side logo mindre */
+.logo {
+  height: 100px;  
+  width: auto;
+  opacity: 0.95;
+}

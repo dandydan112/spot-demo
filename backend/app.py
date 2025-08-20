@@ -1,4 +1,3 @@
-# backend/app.py
 from __future__ import annotations
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
@@ -6,7 +5,7 @@ from fastapi.responses import FileResponse
 import os
 
 from .routers import robots as robots_router
-from .routers.spot import spot as spot_router
+from .routers.spot import router as spot_router   # Samlet Spot-router (__init__.py)
 
 app = FastAPI(title="Robot Hub")
 
@@ -20,9 +19,9 @@ def root():
 
 @app.get("/robot")
 def robot_page():
-    # generisk robotside (frontend/robot.html) – ?id=spot-001
+    # Generisk robotside (frontend/robot.html) – ?id=spot-001
     return FileResponse(os.path.join(frontend_dir, "robot.html"))
 
 # API routers
 app.include_router(robots_router.router)
-app.include_router(spot_router.router)
+app.include_router(spot_router)   # Hele Spot API’et (status/stream/perception/demo)
