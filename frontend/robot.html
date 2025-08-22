@@ -17,10 +17,21 @@
   <main class="shell">
     <h1 id="title">Robot</h1>
 
-    <!-- Video container -->
-    <div class="video-wrap">
+    <!-- Switch mellem visninger -->
+    <div class="switcher" style="margin-bottom:15px;">
+      <button onclick="showView('camera')">Front Camera</button>
+      <button onclick="showView('map')">3D Visualizer</button>
+    </div>
+
+    <!-- Kamera-visning -->
+    <div id="cameraView" class="video-wrap">
       <img id="mjpeg" alt="stream">
       <canvas id="overlay"></canvas>
+    </div>
+
+    <!-- 3D-visualizer -->
+    <div id="mapView" style="display:none; width:100%; height:500px;">
+      <canvas id="mapCanvas" style="width:100%; height:100%;"></canvas>
     </div>
 
     <!-- Controls: status + knapper -->
@@ -41,7 +52,9 @@
     </div>
   </main>
 
-  <!-- JS bundet sidst -->
-  <script src="/static/js/robot.js?v=2"></script>
+  <!-- Three.js fra CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.155/build/three.min.js"></script>
+  <!-- JS -->
+  <script src="/static/js/robot.js?v=3"></script>
 </body>
 </html>

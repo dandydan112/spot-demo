@@ -8,6 +8,9 @@ import bosdyn.client
 import bosdyn.client.util
 from bosdyn.client.robot_command import RobotCommandClient, blocking_stand, RobotCommandBuilder
 from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
+from bosdyn.client.point_cloud import PointCloudClient
+from bosdyn.api import point_cloud_pb2
+from bosdyn.client.image import ImageClient
 
 # ============================================================
 # FAKE CLIENT (bruges til test uden Spot)
@@ -77,6 +80,8 @@ class RealSpotClient:
             self.lease_keepalive = LeaseKeepAlive(self.lease_client, return_at_exit=True)
             print("[RealSpotClient] LeaseKeepAlive startet")
 
+            # Point Cloud Client
+            self.image_client = self.robot.ensure_client(ImageClient.default_service_name)
         except Exception as e:
             print(f"[RealSpotClient] FEJL under init: {e}")
             raise

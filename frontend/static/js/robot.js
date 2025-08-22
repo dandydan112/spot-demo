@@ -3,7 +3,7 @@ function qs(name){
   return new URL(location.href).searchParams.get(name); 
 }
 
-// HTML elementer vi skal arbejde med
+// HTML elementer
 const statusEl   = document.getElementById('status');
 const dotEl      = document.getElementById('dot');
 const titleEl    = document.getElementById('title');
@@ -71,6 +71,50 @@ async function init() {
   await updateStatus(id);
   setInterval(() => updateStatus(id), 5000);
 }
+
+//_______________________________________________________________________________________________________________________
+
+let scene, camera, renderer, pointCloud;
+
+function init3D() {
+  const canvas = document.getElementById("mapCanvas");
+  scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(75, canvas.clientWidth/canvas.clientHeight, 0.1, 100);
+  renderer = new THREE.WebGLRenderer({canvas: canvas});
+  renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+  camera.position.z = 2;
+
+  const ws = new WebSocket(`ws://${location.host}/api/robots/spot-001/pointcloud`);
+  ws.onmessage = (ev) => {
+    const data = JSON.parse(ev.data);
+    const positions = new Float32Array(data.points.length * 3);
+    for (let i=0; i<data.points.length; i++) {
+      positions[i*3+0] = data.points[i][0];
+      positions[i*3+1] = data.points[i][1];
+      positions[i*3+2] = data.points[i][2];
+    }
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    const material = new THREE.PointsMaterial({color: 0x00ff00, size: 0.02});
+    if (pointCloud) scene.remove(pointCloud);
+    pointCloud = new THREE.Points(geometry, material);
+    scene.add(pointCloud);
+  };
+
+  function animate() {
+    requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+  }
+  animate();
+}
+
+function showView(view) {
+  document.getElementById("cameraView").style.display = (view==="camera") ? "block" : "none";
+  document.getElementById("mapView").style.display = (view==="map") ? "block" : "none";
+  if (view === "map" && !scene) init3D();
+}
+
+/*________________________________________________________________________________________________________________*/
 
 // Generisk funktion til at kalde Spot demo endpoints
 async function callDemo(id, action) {
