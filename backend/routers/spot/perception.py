@@ -4,7 +4,6 @@ from __future__ import annotations
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from fastapi.responses import JSONResponse
 
-# Brug den fælles spot_client i stedet for at lave en ny
 from ...services.spot_singleton import spot_client  
 
 router = APIRouter(prefix="/api/robots/spot-001", tags=["spot"])

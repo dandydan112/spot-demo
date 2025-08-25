@@ -2,8 +2,9 @@
 from __future__ import annotations
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
+from fastapi.concurrency import run_in_threadpool   # Importeret så vi kan køre blokkerende kode i en tråd
 
-from ...services.spot_singleton import spot_client  # ← fælles client
+from ...services.spot_singleton import spot_client  # fælles client, Singleton :))
 
 router = APIRouter()
 
@@ -12,7 +13,8 @@ router = APIRouter()
 async def hello_demo():
     """Endpoint til 'Hello Spot' demo."""
     try:
-        msg = spot_client.hello_spot()
+        # CHANGED: kør hello_spot i baggrundstråd så det ikke blokerer video-streamen
+        msg = await run_in_threadpool(spot_client.hello_spot)
         return {"status": "ok", "message": msg}
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
@@ -22,7 +24,8 @@ async def hello_demo():
 async def lay_demo():
     """Endpoint til at lægge Spot ned (sit)."""
     try:
-        msg = spot_client.lay_down()
+        # CHANGED: kør lay_down i baggrundstråd
+        msg = await run_in_threadpool(spot_client.lay_down)
         return {"status": "ok", "message": msg}
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
@@ -32,7 +35,8 @@ async def lay_demo():
 async def poweroff_demo():
     """Endpoint til at slukke Spot (power off)."""
     try:
-        msg = spot_client.power_off()
+        # CHANGED: kør power_off i baggrundstråd
+        msg = await run_in_threadpool(spot_client.power_off)
         return {"status": "ok", "message": msg}
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
