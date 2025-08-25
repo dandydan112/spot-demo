@@ -7,6 +7,10 @@
   <link rel="icon" href="/static/img/favicon.ico">
   <link rel="stylesheet" href="/static/css/robot.css?v=1">
   <link rel="stylesheet" href="/static/css/base.css?v=1">
+  <!-- Three.js til 3D visualizer -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.154/build/three.min.js"></script>
+  <!-- OrbitControls (til at rotere/zoome i 3D viewet) -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.154/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body>
   <header class="shell header-flex">
@@ -17,10 +21,21 @@
   <main class="shell">
     <h1 id="title">Robot</h1>
 
-    <!-- Video container -->
-    <div class="video-wrap">
+    <!-- View switcher -->
+    <div class="view-switch" style="margin-bottom: 10px;">
+      <button id="cameraBtn">Camera</button>
+      <button id="vizBtn">3D Visualizer</button>
+    </div>
+
+    <!-- Camera view -->
+    <div id="cameraView" class="video-wrap">
       <img id="mjpeg" alt="stream">
       <canvas id="overlay"></canvas>
+    </div>
+
+    <!-- Visualizer view (hidden by default) -->
+    <div id="visualizerView" class="video-wrap" style="display:none;">
+      <canvas id="vizCanvas" style="width:100%; height:500px; background:#000;"></canvas>
     </div>
 
     <!-- Controls: status + knapper -->
@@ -42,6 +57,6 @@
   </main>
 
   <!-- JS bundet sidst -->
-  <script src="/static/js/robot.js?v=2"></script>
+  <script src="/static/js/robot.js?v=3"></script>
 </body>
 </html>

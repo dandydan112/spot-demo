@@ -1,20 +1,28 @@
+# backend/routers/spot/stream.py
 from __future__ import annotations
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect
-from fastapi.responses import StreamingResponse, JSONResponse
-import subprocess
+from fastapi import APIRouter
+from fastapi.responses import StreamingResponse
 
-from ...services.spot_client import FakeSpotClient
-from ...config import SPOT_CONFIG   # Hent konfig
+from ...services.spot_client import FakeSpotClient, RealSpotClient
+from ...config import USE_FAKE_SPOT, SPOT_CONFIG
 
-router = APIRouter(prefix="/api/robots/spot-001", tags=["spot"])
-client = FakeSpotClient(placeholder_path="frontend/placeholder.mp4")
+router = APIRouter()
+
+# Vælg klient (FakeSpotClient vs RealSpotClient)
+if USE_FAKE_SPOT:
+    client = FakeSpotClient()
+else:
+    client = RealSpotClient(
+        hostname=SPOT_CONFIG["hostname"],
+        username=SPOT_CONFIG["username"],
+        password=SPOT_CONFIG["password"],
+    )
 
 BOUNDARY = "frame"
 
-
-
 @router.get("/stream/mjpeg")
 async def stream_mjpeg():
+    """Streamer MJPEG fra Spot eller FakeSpotClient."""
     async def gen():
         async for jpg in client.mjpeg_frames():
             yield (

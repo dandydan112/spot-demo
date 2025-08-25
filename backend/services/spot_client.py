@@ -8,6 +8,8 @@ import bosdyn.client
 import bosdyn.client.util
 from bosdyn.client.robot_command import RobotCommandClient, blocking_stand, RobotCommandBuilder
 from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
+from bosdyn.client.image import ImageClient
+from bosdyn.api import image_pb2
 
 # ============================================================
 # FAKE CLIENT (bruges til test uden Spot)
@@ -50,7 +52,6 @@ class FakeSpotClient:
 # ============================================================
 # REAL CLIENT (kræver Spot SDK + en rigtig robot)
 # ============================================================
-
 class RealSpotClient:
     name = "spot-001"
     kind = "spot"
@@ -60,79 +61,84 @@ class RealSpotClient:
         try:
             print(f"[RealSpotClient] Forbinder til Spot @ {hostname} som {username}")
 
-            # Initialiser Spot SDK
+            # Init SDK
             self.sdk = bosdyn.client.create_standard_sdk("spot-demo")
             self.robot = self.sdk.create_robot(hostname)
 
-            # Login + time sync
+            # Auth + time sync
             self.robot.authenticate(username, password)
-            bosdyn.client.util.authenticate(self.robot)  # sikrer time sync m.m.
+            bosdyn.client.util.authenticate(self.robot)
             print("[RealSpotClient] Auth + Time Sync OK")
 
             # Clients
             self.command_client = self.robot.ensure_client(RobotCommandClient.default_service_name)
-            self.lease_client = self.robot.ensure_client(LeaseClient.default_service_name)
+            self.lease_client   = self.robot.ensure_client(LeaseClient.default_service_name)
+            self.image_client   = self.robot.ensure_client(ImageClient.default_service_name)
 
-            # LeaseKeepAlive sørger for at vi hele tiden har en lease
+            # Lease: force-take hvis en anden session holder den
             self.lease_keepalive = LeaseKeepAlive(self.lease_client, return_at_exit=True)
-            print("[RealSpotClient] LeaseKeepAlive startet")
+            print("[RealSpotClient] Lease OK")
 
         except Exception as e:
             print(f"[RealSpotClient] FEJL under init: {e}")
             raise
 
-
+    # ---------------- DEMOS ----------------
     def hello_spot(self) -> str:
-        """Få Spot til at stå op og lave et lille 'hej'-nik."""
         print("[RealSpotClient] Starter Hello Spot demo...")
 
-        # Power on robot
         self.robot.power_on(timeout_sec=20)
         assert self.robot.is_powered_on(), "Spot kunne ikke starte"
         print("[RealSpotClient] Power ON OK")
 
-        # Stå op
         blocking_stand(self.command_client, timeout_sec=10)
         print("[RealSpotClient] Spot står op")
 
         # Løft → vent → sænk
-        cmd1 = RobotCommandBuilder.synchro_stand_command(body_height=0.1)
-        self.command_client.robot_command(cmd1)
-        print("[RealSpotClient] Løfter")
+        self.command_client.robot_command(RobotCommandBuilder.synchro_stand_command(body_height=0.1))
         time.sleep(2)
-
-        cmd2 = RobotCommandBuilder.synchro_stand_command(body_height=-0.1)
-        self.command_client.robot_command(cmd2)
-        print("[RealSpotClient] Sænker")
+        self.command_client.robot_command(RobotCommandBuilder.synchro_stand_command(body_height=-0.1))
         time.sleep(2)
-
-        # Tilbage til normal stand
-        cmd3 = RobotCommandBuilder.synchro_stand_command(body_height=0.0)
-        self.command_client.robot_command(cmd3)
+        self.command_client.robot_command(RobotCommandBuilder.synchro_stand_command(body_height=0.0))
         print("[RealSpotClient] Tilbage til normal stand")
 
         return "Hello Spot demo udført!"
     
     def lay_down(self) -> str:
-        """Få Spot tilbage i siddende tilstand."""
         print("[RealSpotClient] Lay Spot → Sit")
-
-        sit_cmd = RobotCommandBuilder.synchro_sit_command()
-        self.command_client.robot_command(sit_cmd)
-        print("[RealSpotClient] Spot sidder")
-
+        self.command_client.robot_command(RobotCommandBuilder.synchro_sit_command())
         return "Spot er sat tilbage i siddende tilstand"
 
     def power_off(self) -> str:
-        """Slukker Spot sikkert ned."""
         print("[RealSpotClient] Powering OFF Spot...")
         self.robot.power_off(cut_immediately=False, timeout_sec=20)
         assert not self.robot.is_powered_on(), "Kunne ikke slukke Spot"
         return "Spot er slukket."
 
+    # ---------------- CAMERA STREAM ----------------
+    async def mjpeg_frames(self) -> AsyncIterator[bytes]:
+        """Streamer rigtige kamera billeder fra Spot som MJPEG."""
+        while True:
+            try:
+                sources = ["frontleft_fisheye_image"]  # evt. prøv flere kilder
+                image_responses = self.image_client.get_image_from_sources(sources)
+                img = image_responses[0]
+
+                if img.shot.image.format == image_pb2.Image.FORMAT_JPEG:
+                    yield img.shot.image.data
+                else:
+                    pil_img = Image.frombytes(
+                        "RGB", (img.shot.image.cols, img.shot.image.rows), img.shot.image.data
+                    )
+                    buf = io.BytesIO()
+                    pil_img.save(buf, format="JPEG")
+                    yield buf.getvalue()
+            except Exception as e:
+                print("MJPEG frame error:", e)
+
+            await asyncio.sleep(1/15)  # ~15 fps
 
 
-# ============================================================
-# Eksporter kun de 2 clients
+
 # ============================================================
 __all__ = ["FakeSpotClient", "RealSpotClient"]
