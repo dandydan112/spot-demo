@@ -1,22 +1,20 @@
+# backend/routers/spot/perception.py
 from __future__ import annotations
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect
-from fastapi.responses import StreamingResponse, JSONResponse
-import subprocess
 
-from ...services.spot_client import FakeSpotClient
-from ...config import SPOT_CONFIG   # Hent konfig
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from fastapi.responses import JSONResponse
+
+# Brug den fælles spot_client i stedet for at lave en ny
+from ...services.spot_singleton import spot_client  
 
 router = APIRouter(prefix="/api/robots/spot-001", tags=["spot"])
-client = FakeSpotClient(placeholder_path="frontend/placeholder.mp4")
-
-BOUNDARY = "frame"
 
 
 @router.websocket("/perception")
 async def perception_ws(ws: WebSocket):
     await ws.accept()
     try:
-        async for msg in client.perception_stream():
+        async for msg in spot_client.perception_stream():
             await ws.send_json(msg)
     except WebSocketDisconnect:
         pass

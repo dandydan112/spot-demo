@@ -3,20 +3,10 @@ from fastapi import APIRouter, WebSocket
 import asyncio, json, numpy as np
 from bosdyn.api import image_pb2
 
-from ...services.spot_client import RealSpotClient, FakeSpotClient
-from ...config import USE_FAKE_SPOT, SPOT_CONFIG
+from ...services.spot_singleton import spot_client  # ← BRUG singleton
 
 router = APIRouter()
 
-# Init Spot client
-if USE_FAKE_SPOT:
-    spot_client = FakeSpotClient()
-else:
-    spot_client = RealSpotClient(
-        hostname=SPOT_CONFIG["hostname"],
-        username=SPOT_CONFIG["username"],
-        password=SPOT_CONFIG["password"],
-    )
 
 @router.websocket("/api/robots/spot-001/visualizer")
 async def ws_visualizer(ws: WebSocket):
@@ -24,7 +14,7 @@ async def ws_visualizer(ws: WebSocket):
     await ws.accept()
     try:
         while True:
-            if USE_FAKE_SPOT:
+            if spot_client.kind == "spot" and spot_client.display_name == "Spot (Demo)":
                 # Fake tilfældige punkter (til test uden robot)
                 points = np.random.rand(500, 3).tolist()
                 await ws.send_text(json.dumps({"points": points}))

@@ -3,28 +3,17 @@ from __future__ import annotations
 from fastapi import APIRouter
 from fastapi.responses import StreamingResponse
 
-from ...services.spot_client import FakeSpotClient, RealSpotClient
-from ...config import USE_FAKE_SPOT, SPOT_CONFIG
+from ...services.spot_singleton import spot_client  # ← brug singleton!
 
 router = APIRouter()
-
-# Vælg klient (FakeSpotClient vs RealSpotClient)
-if USE_FAKE_SPOT:
-    client = FakeSpotClient()
-else:
-    client = RealSpotClient(
-        hostname=SPOT_CONFIG["hostname"],
-        username=SPOT_CONFIG["username"],
-        password=SPOT_CONFIG["password"],
-    )
 
 BOUNDARY = "frame"
 
 @router.get("/stream/mjpeg")
 async def stream_mjpeg():
-    """Streamer MJPEG fra Spot eller FakeSpotClient."""
+    """Streamer MJPEG fra Spot (Real) eller FakeSpotClient."""
     async def gen():
-        async for jpg in client.mjpeg_frames():
+        async for jpg in spot_client.mjpeg_frames():
             yield (
                 f"--{BOUNDARY}\r\n"
                 "Content-Type: image/jpeg\r\n"
