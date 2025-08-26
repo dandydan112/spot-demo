@@ -13,7 +13,7 @@ router = APIRouter()
 async def hello_demo():
     """Endpoint til 'Hello Spot' demo."""
     try:
-        # CHANGED: kør hello_spot i baggrundstråd så det ikke blokerer video-streamen
+        # kør hello_spot i baggrundstråd så det ikke blokerer video-streamen
         msg = await run_in_threadpool(spot_client.hello_spot)
         return {"status": "ok", "message": msg}
     except Exception as e:
@@ -24,7 +24,6 @@ async def hello_demo():
 async def lay_demo():
     """Endpoint til at lægge Spot ned (sit)."""
     try:
-        # CHANGED: kør lay_down i baggrundstråd
         msg = await run_in_threadpool(spot_client.lay_down)
         return {"status": "ok", "message": msg}
     except Exception as e:
@@ -35,8 +34,16 @@ async def lay_demo():
 async def poweroff_demo():
     """Endpoint til at slukke Spot (power off)."""
     try:
-        # CHANGED: kør power_off i baggrundstråd
         msg = await run_in_threadpool(spot_client.power_off)
+        return {"status": "ok", "message": msg}
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
+
+@router.post("/demo/poweron")
+async def poweron_demo():
+    """Endpoint til at tænde Spot (power on)."""
+    try:
+        msg = await run_in_threadpool(spot_client.power_on)
         return {"status": "ok", "message": msg}
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)

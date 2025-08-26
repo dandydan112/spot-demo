@@ -115,6 +115,12 @@ class RealSpotClient:
         assert not self.robot.is_powered_on(), "Kunne ikke slukke Spot"
         return "Spot er slukket."
 
+    def power_on(self) -> str:
+        print("[RealSpotClient] Powering ON Spot...")
+        self.robot.power_on(timeout_sec=20)
+        assert self.robot.is_powered_on(), "Kunne ikke tænde Spot"
+        return "Spot er tændt."
+
     # ---------------- CAMERA STREAM ----------------
     async def mjpeg_frames(self) -> AsyncIterator[bytes]:
         """Streamer rigtige kamera billeder fra Spot som MJPEG."""
