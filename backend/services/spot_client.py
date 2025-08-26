@@ -10,6 +10,8 @@ from bosdyn.client.robot_command import RobotCommandClient, blocking_stand, Robo
 from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
 from bosdyn.client.image import ImageClient
 from bosdyn.api import image_pb2
+from bosdyn.api import robot_command_pb2  # Bruger den til rollover
+from bosdyn.client.robot_command import RobotCommandBuilder # Rollover
 
 # ============================================================
 # FAKE CLIENT (bruges til test uden Spot)
@@ -121,10 +123,30 @@ class RealSpotClient:
         assert self.robot.is_powered_on(), "Kunne ikke tænde Spot"
         return "Spot er tændt."
 
-    def roll_over(self) -> str:
-        print("[RealSpotClient] Ruller Spot...")
-        self.command_client.robot_command(RobotCommandBuilder.synchro_roll_command())
-        return "Spot er rullet over."
+    def roll_over(self, direction: int = 1) -> str:
+        """Få Spot til at gå i 'battery change position' (rollover).
+        direction: 1 = højre, 2 = venstre
+        """
+        print("[RealSpotClient] Rollover (battery change position)")
+
+        # Sørg for at robotten er tændt
+        self.robot.power_on(timeout_sec=20)
+        assert self.robot.is_powered_on(), "Spot kunne ikke starte"
+
+        # Sørg for at den sidder ned først
+        sit_cmd = RobotCommandBuilder.synchro_sit_command()
+        self.command_client.robot_command(sit_cmd)
+        time.sleep(3)
+
+        # Byg battery change pose kommando
+        cmd = robot_command_pb2.RobotCommand()
+        cmd.full_body_command.battery_change_pose_request.direction_hint = direction
+
+        # Send kommando
+        self.command_client.robot_command(cmd)
+        print(f"[RealSpotClient] Spot laver rollover (dir={direction})")
+
+        return "Spot er nu i battery change position (rollover)."
 
     # ---------------- CAMERA STREAM ----------------
     async def mjpeg_frames(self) -> AsyncIterator[bytes]:
