@@ -47,3 +47,13 @@ async def poweron_demo():
         return {"status": "ok", "message": msg}
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
+    
+
+@router.post("/demo/rollover")
+async def rollover_demo():
+    """Endpoint til at rulle Spot over."""
+    try:
+        msg = await run_in_threadpool(spot_client.roll_over)
+        return {"status": "ok", "message": msg}
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)

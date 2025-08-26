@@ -121,6 +121,11 @@ class RealSpotClient:
         assert self.robot.is_powered_on(), "Kunne ikke tænde Spot"
         return "Spot er tændt."
 
+    def roll_over(self) -> str:
+        print("[RealSpotClient] Ruller Spot...")
+        self.command_client.robot_command(RobotCommandBuilder.synchro_roll_command())
+        return "Spot er rullet over."
+
     # ---------------- CAMERA STREAM ----------------
     async def mjpeg_frames(self) -> AsyncIterator[bytes]:
         """Streamer rigtige kamera billeder fra Spot som MJPEG."""

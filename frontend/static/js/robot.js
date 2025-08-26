@@ -158,18 +158,30 @@ async function callDemo(id, action) {
 document.getElementById('helloBtn').addEventListener('click', () => {
   callDemo(qs('id'), "hello");
 });
+
 document.getElementById('layBtn').addEventListener('click', () => {
   callDemo(qs('id'), "lay");
 });
+
+document.getElementById('powerOnBtn').addEventListener('click', () => {
+  callDemo(qs('id'), "poweron");
+});
+
 document.getElementById('powerOffBtn').addEventListener('click', () => {
   callDemo(qs('id'), "poweroff");
 });
+
+document.getElementById('rolloverBtn').addEventListener('click', () => {
+  callDemo(qs('id'), "rollover");
+});
+
 document.getElementById('cameraBtn').addEventListener('click', () => {
   showView("camera");
 });
 document.getElementById('vizBtn').addEventListener('click', () => {
   showView("visualizer");
 });
+
 
 // ------------------ Start ------------------
 init();
