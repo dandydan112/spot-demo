@@ -3,9 +3,9 @@
   --fg: #000000;         /* Mørk tekstfarve */
   --muted: #000000;      /* Tonet grå tekst */
   --card: #eae9e7;       /* Kassers baggrund */
-  --line: #6d0000;       /* Find den rigtige røde hexkode */
+  --line: #c7142f;       /* Find den rigtige røde hexkode */
   --accent: #00706d;     /* TI’s grøn-teal accent */
-  --accent-red: #c60000; /* TI rød accent */
+  --accent-red: #ED1A3B; /* TI rød accent */
 }
 
 * { box-sizing: border-box; }
