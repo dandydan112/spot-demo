@@ -57,3 +57,30 @@ async def rollover_demo():
         return {"status": "ok", "message": msg}
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
+
+@router.post("/demo/stand")
+async def stand_demo():
+    """Endpoint til at få Spot til at stå op."""
+    try:
+        msg = await run_in_threadpool(spot_client.stand_up)
+        return {"status": "ok", "message": msg}
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
+    
+@router.post("/demo/sit")
+async def sit_demo():
+    """Endpoint til at få Spot til at sidde."""
+    try:
+        msg = await run_in_threadpool(spot_client.sit_down)
+        return {"status": "ok", "message": msg}
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
+
+@router.post("/demo/fiducial")
+async def fiducial_demo():
+    """Endpoint til at få Spot til at følge et fiducial marker."""
+    try:
+        msg = await run_in_threadpool(spot_client.fiducial_follow)
+        return {"status": "ok", "message": msg}
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)

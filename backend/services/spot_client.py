@@ -148,6 +148,12 @@ class RealSpotClient:
 
         return "Spot er nu i battery change position (rollover)."
 
+    # Nye funktioner, der kan tilføjes
+    # def dance(self) -> str:
+    #     print("[RealSpotClient] Får Spot til at danse...")
+    #     self.command_client.robot_command(RobotCommandBuilder.dance_command())
+    #     return "Spot danser nu."
+
     # ---------------- CAMERA STREAM ----------------
     async def mjpeg_frames(self) -> AsyncIterator[bytes]:
         """Streamer rigtige kamera billeder fra Spot som MJPEG."""

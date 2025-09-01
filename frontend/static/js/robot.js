@@ -175,6 +175,18 @@ document.getElementById('rolloverBtn').addEventListener('click', () => {
   callDemo(qs('id'), "rollover");
 });
 
+document.getElementById('standBtn').addEventListener('click', () => {
+  callDemo(qs('id'), "stand");
+});
+
+document.getElementById('sitBtn').addEventListener('click', () => {
+  callDemo(qs('id'), "sit");
+});
+
+document.getElementById('fiducialBtn').addEventListener('click', () => {
+  callDemo(qs('id'), "fiducial");
+});
+
 document.getElementById('cameraBtn').addEventListener('click', () => {
   showView("camera");
 });
