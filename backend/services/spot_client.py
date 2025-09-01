@@ -6,12 +6,13 @@ import numpy as np
 from PIL import Image
 import bosdyn.client
 import bosdyn.client.util
-from bosdyn.client.robot_command import RobotCommandClient, blocking_stand, RobotCommandBuilder
+from bosdyn.client.robot_command import RobotCommandClient, blocking_stand, blocking_sit, RobotCommandBuilder
 from bosdyn.client.lease import LeaseClient, LeaseKeepAlive
 from bosdyn.client.image import ImageClient
 from bosdyn.api import image_pb2
 from bosdyn.api import robot_command_pb2  # Bruger den til rollover
 from bosdyn.client.robot_command import RobotCommandBuilder # Rollover
+from . import spot_fiducial
 
 # ============================================================
 # FAKE CLIENT (bruges til test uden Spot)
@@ -148,11 +149,29 @@ class RealSpotClient:
 
         return "Spot er nu i battery change position (rollover)."
 
-    # Nye funktioner, der kan tilføjes
-    # def dance(self) -> str:
-    #     print("[RealSpotClient] Får Spot til at danse...")
-    #     self.command_client.robot_command(RobotCommandBuilder.dance_command())
-    #     return "Spot danser nu."
+    def stand_up(self) -> str:
+            """Få Spot til at stå op i normal position."""
+            print("[RealSpotClient] Commanding Spot to stand up...")
+
+            self.robot.power_on(timeout_sec=20)
+            assert self.robot.is_powered_on(), "Spot kunne ikke starte"
+
+            blocking_stand(self.command_client, timeout_sec=10)
+            print("[RealSpotClient] Spot står nu op.")
+
+            return "Spot står op nu."
+
+    def sit_down(self) -> str:
+        """Få Spot til at sætte sig ned."""
+        print("[RealSpotClient] Commanding Spot to sit down...")
+
+        self.robot.power_on(timeout_sec=20)
+        assert self.robot.is_powered_on(), "Spot kunne ikke starte"
+
+        blocking_sit(self.command_client, timeout_sec=10)
+        print("[RealSpotClient] Spot sidder nu ned.")
+
+        return "Spot sidder nu ned."
 
     # ---------------- CAMERA STREAM ----------------
     async def mjpeg_frames(self) -> AsyncIterator[bytes]:
