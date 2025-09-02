@@ -66,21 +66,66 @@ async def stand_demo():
         return {"status": "ok", "message": msg}
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
-    
-@router.post("/demo/sit")
-async def sit_demo():
-    """Endpoint til at få Spot til at sidde."""
-    try:
-        msg = await run_in_threadpool(spot_client.sit_down)
-        return {"status": "ok", "message": msg}
-    except Exception as e:
-        return JSONResponse(content={"error": str(e)}, status_code=500)
 
 @router.post("/demo/fiducial")
 async def fiducial_demo():
     """Endpoint til at få Spot til at følge et fiducial marker."""
     try:
         msg = await run_in_threadpool(spot_client.fiducial_follow)
+        return {"status": "ok", "message": msg}
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
+
+@router.post("/demo/increase_height")
+async def increase_height_demo():
+    """Endpoint til at få Spot til at hæve sin højde."""
+    try:
+        msg = await run_in_threadpool(spot_client.increase_height)
+        return {"status": "ok", "message": msg}
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
+
+@router.post("/demo/decrease_height")
+async def decrease_height_demo():
+    """Endpoint til at få Spot til at sænke sin højde."""
+    try:
+        msg = await run_in_threadpool(spot_client.decrease_height)
+        return {"status": "ok", "message": msg}
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
+
+@router.post("/demo/bodyroll")
+async def bodyroll_demo():
+    """Endpoint til at få Spot til at lave en bodyroll."""
+    try:
+        msg = await run_in_threadpool(spot_client.bodyroll)
+        return {"status": "ok", "message": msg}
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
+
+@router.post("/demo/snakehead")
+async def snakehead_demo():
+    """Endpoint til at få Spot til at lave en snakehead bevægelse."""
+    try:
+        msg = await run_in_threadpool(spot_client.snakehead)
+        return {"status": "ok", "message": msg}
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
+
+@router.post("/demo/stop")
+async def stop_demo():
+    """Endpoint til at få Spot til at stoppe."""
+    try:
+        msg = await run_in_threadpool(spot_client.stop)
+        return {"status": "ok", "message": msg}
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
+
+@router.post("/demo/estop")
+async def estop_demo():
+    """Endpoint til at få Spot til at gå i nødstop."""
+    try:
+        msg = await run_in_threadpool(spot_client.estop)
         return {"status": "ok", "message": msg}
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)

@@ -179,10 +179,6 @@ document.getElementById('standBtn').addEventListener('click', () => {
   callDemo(qs('id'), "stand");
 });
 
-document.getElementById('sitBtn').addEventListener('click', () => {
-  callDemo(qs('id'), "sit");
-});
-
 document.getElementById('fiducialBtn').addEventListener('click', () => {
   callDemo(qs('id'), "fiducial");
 });
@@ -194,6 +190,29 @@ document.getElementById('vizBtn').addEventListener('click', () => {
   showView("visualizer");
 });
 
+document.getElementById('increaseHeightBtn').addEventListener('click', () => {
+  callDemo(qs('id'), "increase_height");
+});
+
+document.getElementById('decreaseHeightBtn').addEventListener('click', () => {
+  callDemo(qs('id'), "decrease_height");
+});
+
+document.getElementById('bodyrollBtn').addEventListener('click', () => {
+  callDemo(qs('id'), "bodyroll");
+});
+
+document.getElementById('snakeheadBtn').addEventListener('click', () => {
+  callDemo(qs('id'), "snakehead");
+});
+
+document.getElementById('stopBtn').addEventListener('click', () => {
+  callDemo(qs('id'), "stop");
+});
+
+document.getElementById('estopBtn').addEventListener('click', () => {
+  callDemo(qs('id'), "estop");
+});
 
 // ------------------ Start ------------------
 init();
