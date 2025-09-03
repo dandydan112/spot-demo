@@ -308,6 +308,61 @@ class RealSpotClient:
             print(f"[RealSpotClient] FEJL i E-Stop: {e}")
             raise
 
+    def wiggle(self, cycles: int = 3, amplitude: float = 0.2, duration: float = 1.0) -> str:
+        """Få Spot til at 'wiggle' ved at dreje kroppen side-til-side (yaw).
+        cycles: antal gange den skal wiggle (frem+tilbage = 1 cycle).
+        amplitude: hvor meget yaw i radianer (fx 0.2 ≈ 11 grader).
+        duration: hvor længe hver bevægelse varer (sekunder).
+        """
+        print(f"[RealSpotClient] Starter wiggle (cycles={cycles}, amplitude={amplitude}, duration={duration})")
+
+        # Sørg for at Spot er tændt og står op
+        self.robot.power_on(timeout_sec=10)
+        assert self.robot.is_powered_on(), "Spot kunne ikke starte"
+        blocking_stand(self.command_client, timeout_sec=10)
+
+        # Brug EulerZXY til yaw-rotation
+        left_yaw  = RobotCommandBuilder.synchro_stand_command(
+            footprint_R_body=RobotCommandBuilder.euler_zxy(yaw=-amplitude, roll=0.0, pitch=0.0),
+            body_height=0.0
+        )
+        right_yaw = RobotCommandBuilder.synchro_stand_command(
+            footprint_R_body=RobotCommandBuilder.euler_zxy(yaw=+amplitude, roll=0.0, pitch=0.0),
+            body_height=0.0
+        )
+        center_yaw = RobotCommandBuilder.synchro_stand_command(
+            footprint_R_body=RobotCommandBuilder.euler_zxy(yaw=0.0, roll=0.0, pitch=0.0),
+            body_height=0.0
+        )
+
+        for i in range(cycles):
+            print(f"[RealSpotClient] Wiggle cycle {i+1}/{cycles}: left")
+            self.command_client.robot_command(left_yaw, end_time_secs=time.time() + duration)
+            time.sleep(duration)
+
+            print(f"[RealSpotClient] Wiggle cycle {i+1}/{cycles}: right")
+            self.command_client.robot_command(right_yaw, end_time_secs=time.time() + duration)
+            time.sleep(duration)
+
+        # Tilbage til center
+        self.command_client.robot_command(center_yaw, end_time_secs=time.time() + duration)
+        time.sleep(duration)
+
+        print("[RealSpotClient] Wiggle færdig.")
+        return f"Spot har wigglet {cycles} gange."
+
+    def selfright(self) -> str:
+        print("[RealSpotClient] Commanding Spot to self-right...")
+
+        self.robot.power_on(timeout_sec=10)
+        assert self.robot.is_powered_on(), "Spot could not power on"
+
+        cmd = RobotCommandBuilder.selfright_command()
+        self.command_client.robot_command(cmd)
+
+        return "Self-right command sent."
+
+
     # ---------------- CAMERA STREAM ----------------
     async def mjpeg_frames(self) -> AsyncIterator[bytes]:
         """Streamer rigtige kamera billeder fra Spot som MJPEG."""

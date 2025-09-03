@@ -214,6 +214,14 @@ document.getElementById('estopBtn').addEventListener('click', () => {
   callDemo(qs('id'), "estop");
 });
 
+document.getElementById('wiggleBtn').addEventListener('click', () => {
+  callDemo(qs('id'), "wiggle");
+});
+
+document.getElementById('selfrightBtn').addEventListener('click', () => {
+  callDemo(qs('id'), "selfright");
+});
+
 // ------------------ Start ------------------
 init();
 showView("camera");
