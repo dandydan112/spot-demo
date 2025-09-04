@@ -14,7 +14,13 @@ from bosdyn.api import robot_command_pb2  # Bruger den til rollover
 from bosdyn.client.robot_command import RobotCommandBuilder # Rollover
 from . import spot_fiducial
 import math
+from bosdyn.client.math_helpers import SE3Pose   # SE3Pose is here
+from bosdyn.geometry import EulerZXY  
 from bosdyn.client.estop import EstopClient, EstopKeepAlive
+
+
+
+
 
 
 # ============================================================
@@ -361,6 +367,30 @@ class RealSpotClient:
         self.command_client.robot_command(cmd)
 
         return "Self-right command sent."
+        
+    
+def look_up(self, pitch: float = 0.3) -> str:
+    """
+    Få Spot til at kigge op ved at hæve kroppen (positiv pitch).
+    Benytter footprint_R_body – ingen Joint Control-licens nødvendig.
+    """
+    try:
+        cmd_client: RobotCommandClient = self.robot.ensure_client(RobotCommandClient.default_service_name)
+        blocking_stand(cmd_client, timeout_sec=10)
+
+        # Lav en EulerZXY rotation med pitch
+        footprint_R_body = EulerZXY(yaw=0.0, roll=0.0, pitch=pitch)
+
+        command = RobotCommandBuilder.synchro_stand_command(
+            body_height=0.0,
+            footprint_R_body=footprint_R_body
+        )
+
+        cmd_client.robot_command(command, end_time_secs=time.time() + 2.0)
+        return f"Spot tilted body with pitch={pitch:.2f} rad (leaning up)."
+    except Exception as e:
+        return f"Failed to make Spot look up: {e}"
+
 
 
     # ---------------- CAMERA STREAM ----------------

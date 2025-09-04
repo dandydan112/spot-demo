@@ -2,7 +2,6 @@
 from __future__ import annotations
 from fastapi import APIRouter
 from fastapi.responses import StreamingResponse
-
 from ...services.spot_singleton import spot_client  # Bruger singleton :)
 
 router = APIRouter()

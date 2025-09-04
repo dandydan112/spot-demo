@@ -43,6 +43,27 @@ async function updateStatus(id) {
   }
 }
 
+// ------------------ Battery ------------------
+async function updateBattery(id) {
+  try {
+    const res = await fetch(`/api/robots/${encodeURIComponent(id)}/battery`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data.battery_percentage !== undefined) {
+        document.getElementById("battery").textContent =
+          `🔋 ${data.battery_percentage.toFixed(1)}%`;
+      } else {
+        document.getElementById("battery").textContent = "🔋 N/A";
+      }
+    } else {
+      throw new Error("Battery fetch failed");
+    }
+  } catch (e) {
+    document.getElementById("battery").textContent = "🔋 Error";
+  }
+}
+
+
 // ------------------ Init ------------------
 async function init() {
   const id = qs('id');
@@ -64,6 +85,10 @@ async function init() {
   // Status loop
   await updateStatus(id);
   setInterval(() => updateStatus(id), 5000);
+
+  // Battery loop
+  await updateBattery(id);
+  setInterval(() => updateBattery(id), 5000);
 }
 
 // ------------------ 3D Visualizer ------------------
@@ -220,6 +245,10 @@ document.getElementById('wiggleBtn').addEventListener('click', () => {
 
 document.getElementById('selfrightBtn').addEventListener('click', () => {
   callDemo(qs('id'), "selfright");
+});
+
+document.getElementById('lookUpBtn').addEventListener('click', () => {
+  callDemo(qs('id'), "lookup");
 });
 
 // ------------------ Start ------------------
