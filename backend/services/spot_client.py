@@ -17,6 +17,8 @@ import math
 from bosdyn.client.math_helpers import SE3Pose   # SE3Pose is here
 from bosdyn.geometry import EulerZXY  
 from bosdyn.client.estop import EstopClient, EstopKeepAlive
+from bosdyn.client.robot_state import RobotStateClient
+
 
 
 
@@ -59,7 +61,16 @@ class FakeSpotClient:
                 ],
             }
             await asyncio.sleep(0.06)  # ~15 Hz
-
+    
+    def get_battery_state(self):
+        """Returner dummy batteridata til test."""
+        return {
+            "battery_percentage": 100.0,
+            "voltage": 15.0,
+            "current": 0.0,
+            "temperatures": [25.0],
+            "status": "STATUS_UNKNOWN",
+        }
 
 # ============================================================
 # REAL CLIENT (kræver Spot SDK + en rigtig robot)
@@ -369,29 +380,52 @@ class RealSpotClient:
         return "Self-right command sent."
         
     
-def look_up(self, pitch: float = 0.3) -> str:
-    """
-    Få Spot til at kigge op ved at hæve kroppen (positiv pitch).
-    Benytter footprint_R_body – ingen Joint Control-licens nødvendig.
-    """
-    try:
-        cmd_client: RobotCommandClient = self.robot.ensure_client(RobotCommandClient.default_service_name)
-        blocking_stand(cmd_client, timeout_sec=10)
+    def look_up(self, pitch: float = 0.3) -> str:
+        """
+        Få Spot til at kigge op ved at hæve kroppen (positiv pitch).
+        Benytter footprint_R_body – ingen Joint Control-licens nødvendig.
+        """
+        try:
+            cmd_client: RobotCommandClient = self.robot.ensure_client(RobotCommandClient.default_service_name)
+            blocking_stand(cmd_client, timeout_sec=10)
 
-        # Lav en EulerZXY rotation med pitch
-        footprint_R_body = EulerZXY(yaw=0.0, roll=0.0, pitch=pitch)
+            # Lav en EulerZXY rotation med pitch
+            footprint_R_body = EulerZXY(yaw=0.0, roll=0.0, pitch=pitch)
 
-        command = RobotCommandBuilder.synchro_stand_command(
-            body_height=0.0,
-            footprint_R_body=footprint_R_body
-        )
+            command = RobotCommandBuilder.synchro_stand_command(
+                body_height=0.0,
+                footprint_R_body=footprint_R_body
+            )
 
-        cmd_client.robot_command(command, end_time_secs=time.time() + 2.0)
-        return f"Spot tilted body with pitch={pitch:.2f} rad (leaning up)."
-    except Exception as e:
-        return f"Failed to make Spot look up: {e}"
+            cmd_client.robot_command(command, end_time_secs=time.time() + 2.0)
+            return f"Spot tilted body with pitch={pitch:.2f} rad (leaning up)."
+        except Exception as e:
+            return f"Failed to make Spot look up: {e}"
 
+    def get_battery_state(self):
+        """Hent batteritilstand fra den rigtige Spot."""
+        state_client: RobotStateClient = self.robot.ensure_client(RobotStateClient.default_service_name)
+        state = state_client.get_robot_state()
 
+        if not state.battery_states:
+            return None
+
+        battery = state.battery_states[0]  # Spot har typisk kun ét batteri
+
+        # Safely unwrap optional fields
+        battery_percentage = battery.charge_percentage.value if battery.HasField("charge_percentage") else None
+        voltage = battery.voltage.value if battery.HasField("voltage") else None
+        current = battery.current.value if battery.HasField("current") else None
+        temperatures = list(battery.temperatures) if battery.temperatures else []
+        status = battery.status  # enum int; can map to string if you like
+
+        return {
+            "battery_percentage": battery_percentage,
+            "voltage": voltage,
+            "current": current,
+            "temperatures": temperatures,
+            "status": status,
+        }
 
     # ---------------- CAMERA STREAM ----------------
     async def mjpeg_frames(self) -> AsyncIterator[bytes]:
