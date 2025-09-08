@@ -121,15 +121,6 @@ async def stop_demo():
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
 
-@router.post("/demo/estop")
-async def estop_demo():
-    """Endpoint til at få Spot til at gå i nødstop."""
-    try:
-        msg = await run_in_threadpool(spot_client.estop)
-        return {"status": "ok", "message": msg}
-    except Exception as e:
-        return JSONResponse(content={"error": str(e)}, status_code=500)
-
 @router.post("/demo/wiggle")
 async def wiggle_demo():
     """Endpoint til at få Spot til at wiggle."""

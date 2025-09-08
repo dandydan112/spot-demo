@@ -16,7 +16,6 @@ from . import spot_fiducial
 import math
 from bosdyn.client.math_helpers import SE3Pose   # SE3Pose is here
 from bosdyn.geometry import EulerZXY  
-from bosdyn.client.estop import EstopClient, EstopKeepAlive
 from bosdyn.client.robot_state import RobotStateClient
 
 
@@ -312,18 +311,7 @@ class RealSpotClient:
 
         return "Spot er stoppet."
     
-    def estop(self) -> str:
-        """Udløs et nødstop (cut motorer øjeblikkeligt)."""
-        print("[RealSpotClient] Udløser E-Stop...")
 
-        try:
-            estop_client = self.robot.ensure_client(EstopClient.default_service_name)
-            estop_client.stop()  # sender et emergency stop
-            print("[RealSpotClient] Nødstop aktiveret.")
-            return "Nødstop aktiveret."
-        except Exception as e:
-            print(f"[RealSpotClient] FEJL i E-Stop: {e}")
-            raise
 
     def wiggle(self, cycles: int = 3, amplitude: float = 0.2, duration: float = 1.0) -> str:
         """Få Spot til at 'wiggle' ved at dreje kroppen side-til-side (yaw).
@@ -410,14 +398,14 @@ class RealSpotClient:
         if not state.battery_states:
             return None
 
-        battery = state.battery_states[0]  # Spot har typisk kun ét batteri
+        battery = state.battery_states[0]  # Spot har kun ét batteri
 
         # Safely unwrap optional fields
         battery_percentage = battery.charge_percentage.value if battery.HasField("charge_percentage") else None
         voltage = battery.voltage.value if battery.HasField("voltage") else None
         current = battery.current.value if battery.HasField("current") else None
         temperatures = list(battery.temperatures) if battery.temperatures else []
-        status = battery.status  # enum int; can map to string if you like
+        status = battery.status  # enum int;    
 
         return {
             "battery_percentage": battery_percentage,
