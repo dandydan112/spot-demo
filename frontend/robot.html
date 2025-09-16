@@ -29,7 +29,11 @@
 
     <!-- Camera view -->
     <div id="cameraView" class="video-wrap">
-      <img id="mjpeg" alt="stream">
+      <!-- Stitched front cameras (left + right) -->
+      <img id="mjpeg" 
+     src="/api/robots/spot-001/camera/front/stitched/stream" 
+     alt="Front cameras stream"
+     style="width:100%; height:auto;" />
       <canvas id="overlay"></canvas>
     </div>
 
@@ -46,7 +50,6 @@
         <span id="status" class="muted">Ukendt</span>
         <span id="battery" class="muted" style="margin-left:10px;">🔋 --%</span>
       </div>
-      
 
       <!-- Demo-knapper + feedback felt -->
       <div class="demo-controls">
