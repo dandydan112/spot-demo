@@ -28,25 +28,22 @@
     </div>
 
     <!-- Camera view -->
-    <div id="cameraView" class="camera-layout">
-      <!-- Front cameras -->
-      <div class="front-cams">
-        <img src="/spot/stream/frontleft" alt="Front Left Camera">
-        <img src="/spot/stream/frontright" alt="Front Right Camera">
-      </div>
-
-      <!-- Middle: left cam + spot image + right cam -->
-      <div class="middle-row">
-        <img class="side-cam" src="/spot/stream/left" alt="Left Camera">
-        <img class="spot-image" src="/static/img/spot_topview.png" alt="Spot Top View">
-        <img class="side-cam" src="/spot/stream/right" alt="Right Camera">
-      </div>
-
-      <!-- Back camera -->
-      <div class="back-cam">
-        <img src="/spot/stream/back" alt="Back Camera">
-      </div>
+  <div id="cameraView" class="camera-layout">
+    <div class="front-cams">
+      <img src="/api/robots/spot-001/stream/frontleft" alt="Front Left Camera">
+      <img src="/api/robots/spot-001/stream/frontright" alt="Front Right Camera">
     </div>
+
+    <div class="middle-row">
+      <img class="side-cam" src="/api/robots/spot-001/stream/left" alt="Left Camera">
+      <img class="spot-image" src="/static/img/spot_topview.png" alt="Spot Top View">
+      <img class="side-cam" src="/api/robots/spot-001/stream/right" alt="Right Camera">
+    </div>
+
+    <div class="back-cam">
+      <img src="/api/robots/spot-001/stream/back" alt="Back Camera">
+    </div>
+  </div>
 
     <!-- Visualizer view (hidden by default) -->
     <div id="visualizerView" class="video-wrap" style="display:none;">
