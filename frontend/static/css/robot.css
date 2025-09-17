@@ -22,7 +22,7 @@
 
 /* Status text i bunden af robot-siden */
 #status {
-  margin-top: 8px;
+  margin-top: 4px;
   font-size: 14px;
   color: var(--muted);
 }
@@ -42,6 +42,23 @@
   align-items: center;
   gap: 10px;
 }
+
+/* Fælles styling for alle kamera-billeder */
+.camera-layout img {
+  max-width: 300px;     /* tilpas fælles størrelse */
+  max-height: 200px;
+  object-fit: cover;    /* bevar proportioner */
+  border: 1px solid #111;
+  border-radius: 8px;
+}
+
+/* Specifik rotation */
+#frontleft { transform: rotate(90deg); }
+#frontright { transform: rotate(90deg); }
+#left { transform: rotate(0deg); }
+#right { transform: rotate(180deg); }     /* fx ingen rotation */
+#back { transform: rotate(0deg); }      /* evt. flip her hvis nødvendigt */
+
 
 .front-cams {
   display: flex;
