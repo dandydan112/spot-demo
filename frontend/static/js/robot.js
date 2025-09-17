@@ -7,19 +7,9 @@ function qs(name){
 const statusEl   = document.getElementById('status');
 const dotEl      = document.getElementById('dot');
 const titleEl    = document.getElementById('title');
-const img        = document.getElementById('mjpeg');
-const overlay    = document.getElementById('overlay');
-const ctx        = overlay.getContext('2d');
 const feedbackEl = document.getElementById('feedback');
 const vizCanvas  = document.getElementById('vizCanvas'); // 3D visualizer canvas
 
-// Sørger for at overlay-canvas følger billedets størrelse
-function resizeCanvas(){
-  overlay.width = img.clientWidth;
-  overlay.height = img.clientHeight;
-}
-window.addEventListener('resize', resizeCanvas);
-img.addEventListener('load', resizeCanvas);
 
 // ------------------ Status ------------------
 async function updateStatus(id) {
