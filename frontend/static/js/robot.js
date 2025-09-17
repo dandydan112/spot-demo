@@ -68,19 +68,10 @@ async function updateBattery(id) {
 async function init() {
   const id = qs('id');
 
-  // Hent robot-info
+  // Hent robot-info (navn mm.)
   const res = await fetch(`/api/robots/${encodeURIComponent(id)}`);
   const robot = await res.json();
   titleEl.textContent = robot.name || id;
-
-  // Video-stream (MJPEG)
-  img.src = robot.endpoints.mjpeg;
-
-  // Websocket til perception (overlays – kan laves senere)
-  const proto = location.protocol === 'https:' ? 'wss' : 'ws';
-  const ws = new WebSocket(`${proto}://${location.host}${robot.endpoints.perception}`);
-  ws.onopen  = () => statusEl.textContent = 'Forbundet';
-  ws.onclose = () => statusEl.textContent = 'Lukket';
 
   // Status loop
   await updateStatus(id);
