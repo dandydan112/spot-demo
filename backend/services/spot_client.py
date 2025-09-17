@@ -416,25 +416,37 @@ class RealSpotClient:
         }
 
     # ---------------- CAMERA STREAM ----------------
-    async def mjpeg_frames(self) -> AsyncIterator[bytes]:
-        """Streamer rigtige kamera billeder fra Spot som MJPEG."""
+    async def mjpeg_frames(self, camera: str = "frontleft_fisheye_image") -> AsyncIterator[bytes]:
+        """
+        Streamer rigtige kamera billeder fra Spot som MJPEG.
+        camera: navnet på Spot's kamera source.
+                Gyldige værdier: 
+                - "frontleft_fisheye_image"
+                - "frontright_fisheye_image"
+                - "left_fisheye_image"
+                - "right_fisheye_image"
+                - "back_fisheye_image"
+        """
         while True:
             try:
-                sources = ["frontleft_fisheye_image"]  # evt. prøv flere kilder
-                image_responses = self.image_client.get_image_from_sources(sources)
+                # Hent billedet fra det valgte kamera
+                image_responses = self.image_client.get_image_from_sources([camera])
                 img = image_responses[0]
 
                 if img.shot.image.format == image_pb2.Image.FORMAT_JPEG:
                     yield img.shot.image.data
                 else:
                     pil_img = Image.frombytes(
-                        "RGB", (img.shot.image.cols, img.shot.image.rows), img.shot.image.data
+                        "RGB",
+                        (img.shot.image.cols, img.shot.image.rows),
+                        img.shot.image.data,
                     )
                     buf = io.BytesIO()
                     pil_img.save(buf, format="JPEG")
                     yield buf.getvalue()
+
             except Exception as e:
-                print("MJPEG frame error:", e)
+                print(f"[RealSpotClient] MJPEG frame error ({camera}):", e)
 
             await asyncio.sleep(1/15)  # ~15 fps
 
