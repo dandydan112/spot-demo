@@ -228,6 +228,15 @@ document.getElementById('lookUpBtn').addEventListener('click', () => {
   callDemo(qs('id'), "lookup");
 });
 
+document.getElementById('vizLaunchBtn').addEventListener('click', async () => {
+  const res = await fetch(`/api/robots/spot-001/launch-visualizer`, {
+    method: "POST"
+  });
+  const data = await res.json();
+  alert(data.message || "Done");
+});
+
+
 // ------------------ Start ------------------
 init();
 showView("camera");
