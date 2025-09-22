@@ -196,36 +196,8 @@ document.getElementById('vizBtn').addEventListener('click', () => {
   showView("visualizer");
 });
 
-document.getElementById('increaseHeightBtn').addEventListener('click', () => {
-  callDemo(qs('id'), "increase_height");
-});
-
-document.getElementById('decreaseHeightBtn').addEventListener('click', () => {
-  callDemo(qs('id'), "decrease_height");
-});
-
-document.getElementById('bodyrollBtn').addEventListener('click', () => {
-  callDemo(qs('id'), "bodyroll");
-});
-
-document.getElementById('snakeheadBtn').addEventListener('click', () => {
-  callDemo(qs('id'), "snakehead");
-});
-
-document.getElementById('stopBtn').addEventListener('click', () => {
-  callDemo(qs('id'), "stop");
-});
-
-document.getElementById('wiggleBtn').addEventListener('click', () => {
-  callDemo(qs('id'), "wiggle");
-});
-
 document.getElementById('selfrightBtn').addEventListener('click', () => {
   callDemo(qs('id'), "selfright");
-});
-
-document.getElementById('lookUpBtn').addEventListener('click', () => {
-  callDemo(qs('id'), "lookup");
 });
 
 document.getElementById('vizLaunchBtn').addEventListener('click', async () => {
