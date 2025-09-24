@@ -90,3 +90,11 @@
 .back-cam img {
   width: 250px;
 }
+
+
+button:disabled {
+  opacity: 0.5;           /* makes it look faded */
+  cursor: not-allowed;    /* change cursor to indicate disabled */
+  background-color: #ccc; /* optional: light grey background */
+  color: #666;            /* optional: dark grey text */
+}

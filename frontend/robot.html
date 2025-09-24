@@ -81,15 +81,54 @@
   <!-- JS bundet sidst -->
   <script src="/static/js/robot.js?v=3"></script>
 
-  <script>  
-  document.getElementById("powerOnBtn").onclick = function () {
-  // disable Power On after click
-  this.disabled = true;
+  <script>
+  window.onload = function() {
+    // Safety: enforce initial state
+    document.getElementById("helloBtn").disabled = true;
+    document.getElementById("layBtn").disabled = true;
+    document.getElementById("powerOffBtn").disabled = true;
+    document.getElementById("rolloverBtn").disabled = true;
+    document.getElementById("standBtn").disabled = true;
+    document.getElementById("fiducialBtn").disabled = true;
+    document.getElementById("selfrightBtn").disabled = true;
 
-  // enable Hello Spot and Power Off
-  document.getElementById("helloBtn").disabled = false;
-  document.getElementById("powerOffBtn").disabled = false;
+  // --- Power On logic ---
+  document.getElementById("powerOnBtn").onclick = function () {
+    this.disabled = true; // disable Power On
+    document.getElementById("helloBtn").disabled = false;
+    document.getElementById("powerOffBtn").disabled = false;
+    document.getElementById("selfrightBtn").disabled = false;
+    document.getElementById("rolloverBtn").disabled = false;
+  };
+
+  // --- Lay logic ---
+  document.getElementById("layBtn").onclick = function () {
+    this.disabled = true; // used once until reset
+    document.getElementById("standBtn").disabled = false; // allow standing up again
+    document.getElementById("helloBtn").disabled = false; // keep Hello active
+    document.getElementById("powerOffBtn").disabled = false; // keep Power Off active
+    document.getElementById("rolloverBtn").disabled = false; // enable Rollover when laying
+    document.getElementById("fiducialBtn").disabled = true; // disable fiducial when laying
+    document.getElementById("selfrightBtn").disabled = true; // disable self-right when laying
+  };
+
+  // --- Power Off logic ---
+  document.getElementById("powerOffBtn").onclick = function () {
+    this.disabled = true; // disable Power Off
+    document.getElementById("helloBtn").disabled = true;
+    document.getElementById("selfrightBtn").disabled = true;
+    document.getElementById("powerOnBtn").disabled = false; // allow powering on again
+  };
+
+  // --- Self-right logic ---
+  document.getElementById("selfrightBtn").onclick = function () {
+    this.disabled = true; // used once until reset
+    // keep Hello and Power Off active so user can still interact
+    document.getElementById("helloBtn").disabled = false;
+    document.getElementById("powerOffBtn").disabled = false;
+
+  };
 };
-  </script>
+</script>
 </body>
 </html>
