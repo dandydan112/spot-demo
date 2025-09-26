@@ -115,19 +115,75 @@
   // --- Power Off logic ---
   document.getElementById("powerOffBtn").onclick = function () {
     this.disabled = true; // disable Power Off
-    document.getElementById("helloBtn").disabled = true;
-    document.getElementById("selfrightBtn").disabled = true;
+    document.getElementById("helloBtn").disabled = true; // disable Hello
+    document.getElementById("selfrightBtn").disabled = true; // disable Self-right
     document.getElementById("powerOnBtn").disabled = false; // allow powering on again
+    document.getElementById("layBtn").disabled = true; // disable Lay Spot
+    document.getElementById("rolloverBtn").disabled = true; // disable Rollover
+    document.getElementById("standBtn").disabled = true; // disable Stand Up
+    document.getElementById("fiducialBtn").disabled = true; // disable Fiducial Follow
   };
 
   // --- Self-right logic ---
   document.getElementById("selfrightBtn").onclick = function () {
     this.disabled = true; // used once until reset
-    // keep Hello and Power Off active so user can still interact
-    document.getElementById("helloBtn").disabled = false;
-    document.getElementById("powerOffBtn").disabled = false;
-
+    document.getElementById("helloBtn").disabled = false; //enable Hello
+    document.getElementById("powerOffBtn").disabled = false; // enable Power Off
+    document.getElementById("powerOnBtn").disabled = true; // disable Power On
+    document.getElementById("layBtn").disabled = true; // disable Lay Spot
+    document.getElementById("rolloverBtn").disabled = false; // enable Rollover
+    document.getElementById("standBtn").disabled = false; // enable Stand Up
+    document.getElementById("fiducialBtn").disabled = true; // disable Fiducial Follow
   };
+
+  // --- Stand Up logic ---
+  document.getElementById("standBtn").onclick = function () {
+    this.disabled = true; // used once until reset
+    document.getElementById("layBtn").disabled = false; // enable Lay Spot again
+    document.getElementById("helloBtn").disabled = false; // keep Hello active
+    document.getElementById("powerOffBtn").disabled = true; // disable Power Off when standing
+    document.getElementById("selfrightBtn").disabled = true; // disable Self-right when standing
+    document.getElementById("powerOnBtn").disabled = true; // disable Power On
+    document.getElementById("fiducialBtn").disabled = false; // enable Fiducial Follow
+    document.getElementById("rolloverBtn").disabled = true; // disable Rollover
+  };
+
+  // --- Hello logic ---
+  document.getElementById("helloBtn").onclick = function () {
+    this.disabled = false; // used once until reset
+    document.getElementById("powerOffBtn").disabled = true; // disable Power Off
+    document.getElementById("powerOnBtn").disabled = true; // disable Power On
+    document.getElementById("layBtn").disabled = false; // enable Lay Spot
+    document.getElementById("standBtn").disabled = true; // enable Stand Up
+    document.getElementById("rolloverBtn").disabled = true; // disable Rollover
+    document.getElementById("selfrightBtn").disabled = true; // disable Self-right
+    document.getElementById("fiducialBtn").disabled = false; // enable Fiducial Follow
+  };
+
+  // --- Fiducial Follow logic ---
+  document.getElementById("fiducialBtn").onclick = function () {
+    this.disabled = true; // used once until reset
+    document.getElementById("helloBtn").disabled = false; // enable Hello
+    document.getElementById("powerOffBtn").disabled = true; // disable Power Off
+    document.getElementById("powerOnBtn").disabled = true; // disable Power On
+    document.getElementById("layBtn").disabled = false; // enable Lay Spot
+    document.getElementById("standBtn").disabled = true; // disable Stand Up
+    document.getElementById("rolloverBtn").disabled = true; // disable Rollover
+    document.getElementById("selfrightBtn").disabled = true; // disable Self-right
+  };
+
+  // --- Rollover logic ---
+  document.getElementById("rolloverBtn").onclick = function () {
+    this.disabled = true; // used once until reset
+    document.getElementById("helloBtn").disabled = true; // disable Hello
+    document.getElementById("powerOffBtn").disabled = false; // enable Power Off
+    document.getElementById("powerOnBtn").disabled = false; // enable Power On
+    document.getElementById("layBtn").disabled = true; // disable Lay Spot
+    document.getElementById("standBtn").disabled = true; // disable Stand Up
+    document.getElementById("fiducialBtn").disabled = true; // disable Fiducial Follow
+    document.getElementById("selfrightBtn").disabled = true; // disable Self-right
+  };
+
 };
 </script>
 </body>
