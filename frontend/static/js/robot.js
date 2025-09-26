@@ -189,6 +189,10 @@ document.getElementById('fiducialBtn').addEventListener('click', () => {
   callDemo(qs('id'), "fiducial");
 });
 
+document.getElementById('fiducialStopBtn').addEventListener('click', () => {
+  callDemo(qs('id'), "fiducialstop");
+});
+
 document.getElementById('cameraBtn').addEventListener('click', () => {
   showView("camera");
 });

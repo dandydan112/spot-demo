@@ -76,6 +76,16 @@ async def fiducial_demo():
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
     
+@router.post("/demo/fiducialstop")
+async def fiducialstop_demo():
+    """Stopper fiducial following uden at stoppe hele appen."""
+    try:
+        msg = await run_in_threadpool(spot_client.fiducial_stop)
+        return {"status": "ok", "message": msg}
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
+
+    
 @router.post("/demo/selfright")
 async def selfright_demo():
     """Endpoint til at få Spot til at self-right."""

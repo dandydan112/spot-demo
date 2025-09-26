@@ -18,7 +18,7 @@ from bosdyn.client.math_helpers import SE3Pose   # SE3Pose is here
 from bosdyn.geometry import EulerZXY  
 from bosdyn.client.robot_state import RobotStateClient
 
-
+import threading
 
 
 
@@ -89,7 +89,7 @@ class RealSpotClient:
 
             # Auth + time sync
             self.robot.authenticate(username, password)
-            bosdyn.client.util.authenticate(self.robot)
+            self.robot.start_time_sync()
             print("[RealSpotClient] Auth + Time Sync OK")
 
             # Clients
@@ -98,8 +98,11 @@ class RealSpotClient:
             self.image_client   = self.robot.ensure_client(ImageClient.default_service_name)
 
             # Lease: force-take hvis en anden session holder den
-            self.lease_keepalive = LeaseKeepAlive(self.lease_client, return_at_exit=True)
+            self.lease_keepalive = LeaseKeepAlive(self.lease_client, must_acquire=True, return_at_exit=True)
             print("[RealSpotClient] Lease OK")
+
+            # Fiducial follower reference (bruges til start/stop)
+            self._fiducial_follower = None
 
         except Exception as e:
             print(f"[RealSpotClient] FEJL under init: {e}")
@@ -181,41 +184,51 @@ class RealSpotClient:
             return "Spot står op nu."
 
     
-    def fiducial_follow(self, distance_margin: float = 0.5, limit_speed: bool = True, avoid_obstacles: bool = False) -> str:
+    def fiducial_follow(
+        self,
+        distance_margin: float = 0.5,
+        limit_speed: bool = True,
+        avoid_obstacles: bool = False,
+    ) -> str:
         """Start en fiducial follow demo i en separat tråd."""
+        if self._fiducial_follower is not None:
+            return "Fiducial follow kører allerede."
+
         print("[RealSpotClient] Starter Fiducial Follow demo...")
 
         options = type("Options", (), {})()
         options.distance_margin = distance_margin
         options.limit_speed = limit_speed
         options.avoid_obstacles = avoid_obstacles
-        options.use_world_objects = True  # eller False hvis du vil bruge apriltag lib
+        options.use_world_objects = True  # eller False hvis du vil bruge apriltag
 
         follower = spot_fiducial.FollowFiducial(self.robot, options)
+        self._fiducial_follower = follower
 
-        # Start i en separat tråd, så webapp ikke blokeres
         def _run():
             try:
                 follower.start()
             except Exception as e:
                 print("[RealSpotClient] Fiducial follow fejlede:", e)
+            finally:
+                # frigør reference når tråden dør
+                self._fiducial_follower = None
 
-        thread = threading.Thread(target=_run, daemon=True)
-        thread.start()
-
+        threading.Thread(target=_run, daemon=True).start()
         return "Fiducial follow startet."
-    
 
-    def selfright(self) -> str:
-        print("[RealSpotClient] Commanding Spot to self-right...")
-
-        self.robot.power_on(timeout_sec=10)
-        assert self.robot.is_powered_on(), "Spot could not power on"
-
-        cmd = RobotCommandBuilder.selfright_command()
-        self.command_client.robot_command(cmd)
-
-        return "Self-right command sent."
+    def fiducial_stop(self) -> str:
+        """Stopper fiducial follow hvis det kører."""
+        if self._fiducial_follower is None:
+            return "Ingen fiducial follow kører."
+        try:
+            self._fiducial_follower.stop()
+        except Exception as e:
+            # Returnér en pæn fejl i stedet for 500
+            return f"Fejl ved stop af fiducial: {e}"
+        # Lad tråden selv rydde op i finally; nulstil alligevel referencen for sikkerhed
+        self._fiducial_follower = None
+        return "Fiducial follow stoppet."
 
 
     def get_battery_state(self):

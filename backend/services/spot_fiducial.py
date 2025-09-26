@@ -47,6 +47,7 @@ class FollowFiducial(object):
     """ Detect and follow a fiducial with Spot."""
 
     def __init__(self, robot, options):
+
         # Robot instance variable.
         self._robot = robot
         self._robot_id = robot.ensure_client(RobotIdClient.default_service_name).get_id(timeout=0.4)
@@ -123,6 +124,9 @@ class FollowFiducial(object):
         # Camera source which a bounding box was last detected in.
         self._previous_source = None
 
+        self._running = False
+
+
     @property
     def robot_state(self):
         """Get latest robot state proto."""
@@ -154,6 +158,7 @@ class FollowFiducial(object):
 
     def start(self):
         """Claim lease of robot and start the fiducial follower."""
+        self._running = True
         self._robot.time_sync.wait_for_sync()
 
         # Stand the robot up.
@@ -164,7 +169,7 @@ class FollowFiducial(object):
             # Delay grabbing image until spot is standing (or close enough to upright).
             time.sleep(.35)
 
-        while self._attempts <= self._max_attempts:
+        while self._running and self._attempts <= self._max_attempts:
             detected_fiducial = False
             fiducial_rt_world = None
             if self._use_world_object_service:
@@ -198,9 +203,19 @@ class FollowFiducial(object):
 
             self._attempts += 1  #increment attempts at finding a fiducial
 
-        # Power off at the conclusion of the example.
-        if self._powered_on:
-            self.power_off()
+        return
+
+    def stop(self):
+        """Stop following fiducials without shutting down webapp."""
+        self._running = False
+        try:
+            stop_cmd = RobotCommandBuilder.stop_command()
+            self._robot_command_client.robot_command(stop_cmd)
+            print("Fiducial following stopped (movement halted).")
+        except Exception as e:
+            print(f"Fiducial stop: could not send stop command: {e}")
+
+
 
     def get_fiducial_objects(self):
         """Get all fiducials that Spot detects with its perception system."""
@@ -371,7 +386,7 @@ class FollowFiducial(object):
             # #Feedback to check and wait until the robot is in the desired position or timeout
             start_time = time.time()
             current_time = time.time()
-            while (not self.final_state() and current_time - start_time < end_time):
+            while self._running and (not self.final_state() and current_time - start_time < end_time):
                 time.sleep(.25)
                 current_time = time.time()
         return
