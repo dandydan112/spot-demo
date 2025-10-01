@@ -70,8 +70,8 @@
         <button id="powerOffBtn" disabled>Power Off</button>
         <button id="rolloverBtn">Roll Over</button>
         <button id="standBtn">Stand Up</button>
-        <button id="fiducialBtn">Fiducial Follow</button>
-        <button id="fiducialStopBtn">Stop Fiducial</button>
+        <button id="fiducialBtn">Start Fiducial Follow</button>
+        <button id="fiducialStopBtn">Stop Fiducial Follow</button>
         <button id="selfrightBtn">Self Right</button>
 
         <span id="feedback" class="muted" style="margin-left:10px;"></span>
@@ -92,6 +92,7 @@
     document.getElementById("standBtn").disabled = true;
     document.getElementById("fiducialBtn").disabled = true;
     document.getElementById("selfrightBtn").disabled = true;
+    document.getElementById("fiducialStopBtn").disabled = true;
 
   // --- Power On logic ---
   document.getElementById("powerOnBtn").onclick = function () {
@@ -171,6 +172,7 @@
     document.getElementById("standBtn").disabled = true; // disable Stand Up
     document.getElementById("rolloverBtn").disabled = true; // disable Rollover
     document.getElementById("selfrightBtn").disabled = true; // disable Self-right
+    document.getElementById("fiducialStopBtn").disabled = false; // enable Stop Fiducial Follow
   };
 
   // --- Rollover logic ---
@@ -183,6 +185,19 @@
     document.getElementById("standBtn").disabled = true; // disable Stand Up
     document.getElementById("fiducialBtn").disabled = true; // disable Fiducial Follow
     document.getElementById("selfrightBtn").disabled = true; // disable Self-right
+  };
+
+  // --- Stop Fiducial Follow logic ---
+  document.getElementById("fiducialStopBtn").onclick = function () {
+    this.disabled = true; // used once until reset
+    document.getElementById("helloBtn").disabled = false; // enable Hello
+    document.getElementById("powerOffBtn").disabled = true; // disable Power Off
+    document.getElementById("powerOnBtn").disabled = true; // disable Power On
+    document.getElementById("layBtn").disabled = false; // enable Lay Spot
+    document.getElementById("standBtn").disabled = true; // disable Stand Up
+    document.getElementById("rolloverBtn").disabled = true; // disable Rollover
+    document.getElementById("selfrightBtn").disabled = true; // disable Self-right
+    document.getElementById("fiducialBtn").disabled = false; // enable Fiducial Follow
   };
 
 };

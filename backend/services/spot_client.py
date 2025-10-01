@@ -230,6 +230,16 @@ class RealSpotClient:
         self._fiducial_follower = None
         return "Fiducial follow stoppet."
 
+    def selfright(self) -> str:
+        print("[RealSpotClient] Commanding Spot to self-right...")
+
+        self.robot.power_on(timeout_sec=10)
+        assert self.robot.is_powered_on(), "Spot could not power on"
+
+        cmd = RobotCommandBuilder.selfright_command()
+        self.command_client.robot_command(cmd)
+
+        return "Self-right command sent."
 
     def get_battery_state(self):
         """Hent batteritilstand fra den rigtige Spot."""
