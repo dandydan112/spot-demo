@@ -1,11 +1,12 @@
 fastapi
 uvicorn[standard]
+requests
+jinja2
+python-multipart
+pydantic
 numpy
+opencv-python
 Pillow
 
 -f ../../../prebuilt
 bosdyn-client >= 3.1
-
-numpy
-opencv-python
-Pillow
