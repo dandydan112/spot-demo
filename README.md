@@ -36,7 +36,22 @@ Install `requirements.txt` file:
 pip install -r requirements.txt
 ```
 
----
+### 4. Create Config file
+Create Config file in backend/config.py
+Paste:
+```bash
+# backend/config.py
+
+# Brug FakeSpotClient til test uden robot
+USE_FAKE_SPOT = False
+
+SPOT_CONFIG = {
+    "hostname": "Fill robot ip adress",   
+    "username": "fill robot username",         
+    "password": "fill robot password",  
+}
+```
+
 
 ## Running the Server
 
