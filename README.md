@@ -69,9 +69,12 @@ http://localhost:8080
 | `opencv-python` | For MJPEG streaming or image processing |
 | `Pillow` | Image processing |
 | `bosdyn-client >= 3.1` | Boston Dynamics Spot SDK client |
-| *(optional)* `spot-sdk` | If you use additional Spot SDK utilities |
+| `spot-sdk` | If you use additional Spot SDK utilities |
 
 ---
 
+## To Do
 
+- Make embedded version of the "3D Visualizer"
+- Stitch front fisheye cameras together
 
