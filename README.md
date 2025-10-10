@@ -37,8 +37,7 @@ pip install -r requirements.txt
 ```
 
 ### 4. Create Config file
-Create Config file in backend/config.py
----
+Create Config file in backend/config.py  
 Paste:
 ```bash
 # backend/config.py
