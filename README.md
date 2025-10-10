@@ -1,8 +1,4 @@
-# spot-demo
-
-python3 -m uvicorn backend.app:app --reload --host 0.0.0.0 --port 8080
-
-# 🐾 Spot Demo Webapp
+#  Spot Demo Webapp
 
 A lightweight web application for controlling and monitoring the **Boston Dynamics Spot** robot using **FastAPI**.  
 The app provides a browser interface for sending commands, viewing live camera feeds, and checking Spot’s status in real time.
@@ -29,6 +25,7 @@ cd spot-demo
 
 ### 2. Create and activate a virtual environment
 ```bash
+sudo apt install python3.10-venv
 python3 -m venv venv
 source venv/bin/activate
 ```
