@@ -31,32 +31,28 @@ source venv/bin/activate
 ```
 
 ### 3. Install dependencies
-If you have a `requirements.txt` file:
+Install `requirements.txt` file:
 ```bash
 pip install -r requirements.txt
 ```
 
-```
-
 ---
 
-## ⚙️ Running the Server
+## Running the Server
 
 Start the FastAPI server with:
 ```bash
 python3 -m uvicorn backend.app:app --reload --host 0.0.0.0 --port 8080
+```
 
 Then open your browser at:
-```
+```bash
 http://localhost:8080
 ```
 
-
-
----
-
 ##  Dependencies
 
+```bash
 | Package | Description |
 |----------|-------------|
 | `fastapi` | Web framework for backend API |
@@ -71,7 +67,8 @@ http://localhost:8080
 | `bosdyn-client >= 3.1` | Boston Dynamics Spot SDK client |
 | `spot-sdk` | If you use additional Spot SDK utilities |
 
----
+```
+
 
 ## To Do
 
